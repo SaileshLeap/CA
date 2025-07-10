@@ -15,7 +15,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 // Replace this with your Google Apps Script Web App URL
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJQ65Yj64Nyby0jYXCk2mrBdVL1jDoWRqFOaiMCZWfFRQZjRrVj4bgHckwroGL0p4/exec"
+const API_ROUTE = "/api/apply"
 
 // Mobile-first animation variants
 const fadeIn = {
@@ -25,7 +25,7 @@ const fadeIn = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     },
   },
 }
@@ -37,7 +37,7 @@ const slideIn = {
     x: 0,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     },
   },
   exit: {
@@ -55,7 +55,7 @@ const float = {
   transition: {
     duration: 4,
     repeat: Number.POSITIVE_INFINITY,
-    ease: "easeInOut",
+    ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
   },
 }
 
@@ -64,7 +64,7 @@ const floatReverse = {
   transition: {
     duration: 5,
     repeat: Number.POSITIVE_INFINITY,
-    ease: "easeInOut",
+    ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
   },
 }
 
@@ -259,21 +259,21 @@ export default function ApplicationForm() {
         }
       }
 
-      console.log("Submitting data to:", GOOGLE_APPS_SCRIPT_URL)
+      console.log("Submitting data to:", API_ROUTE)
 
-      // Submit to Google Apps Script
-      const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      const response = await fetch(API_ROUTE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(submitData),
-        mode: "no-cors", // Required for Google Apps Script
       })
 
-      // Since we're using no-cors mode, we can't read the response
-      // We'll assume success if no error is thrown
-      console.log("Form submitted successfully")
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to submit application.")
+      }
+
       setIsSubmitted(true)
     } catch (error) {
       console.error("Error submitting form:", error)
