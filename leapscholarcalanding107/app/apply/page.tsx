@@ -792,7 +792,7 @@ export default function ApplicationForm() {
             transition={{ delay: 0.5 }}
           >
             Thank you for applying to be a Leap Scholar Campus Ambassador. We'll review your application and get back to
-            you within 48 hours via email. {resumeFile && "Your resume has been securely saved to our Google Drive."}
+            you within 48 hours via email. 
           </motion.p>
 
           <motion.div
